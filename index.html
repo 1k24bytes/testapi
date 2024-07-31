@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Quote Tester (Public API)</title>
+    <style>
+      /* ... (keep the same styles as before) ... */
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Random Quote (Public API)</h1>
+      <p id="quote">Click the button to fetch a quote.</p>
+      <p id="author"></p>
+      <button onclick="fetchQuote()">Get New Quote</button>
+      <p id="error"></p>
+    </div>
+
+    <script>
+      function fetchQuote() {
+        const quoteElement = document.getElementById("quote");
+        const authorElement = document.getElementById("author");
+        const errorElement = document.getElementById("error");
+
+        quoteElement.textContent = "Loading...";
+        authorElement.textContent = "";
+        errorElement.textContent = "";
+
+        fetch("http://localhost/randomquote/random_quote.php")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            quoteElement.textContent = `"${data.quote}"`;
+            authorElement.textContent = `- ${data.author}`;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            quoteElement.textContent =
+              "An error occurred while fetching the quote.";
+            authorElement.textContent = "";
+            errorElement.textContent = `Error details: ${error.message}`;
+          });
+      }
+    </script>
+  </body>
+</html>
